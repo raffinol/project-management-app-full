@@ -38,6 +38,8 @@ class Project(db.Model, SerializerMixin):
     due_date = db.Column()
     urgency = db.Column(db.String(10))
 
+    engineer_id = db.Column(db.Integer, db.ForeignKey("engineer.id"))
+
     def __repr__(self):
         return (
             f"\n<project "
@@ -47,5 +49,26 @@ class Project(db.Model, SerializerMixin):
             + f"start_date={self.start_date}, "
             + f"due_date={self.due_date}, "
             + f"urgency={self.urgency}, "
+            + " >"
+        )
+
+
+class Engineers(db.Model, SerializerMixin):
+    __tablename__ = "engineer"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    last_name = db.Column(db.String)
+    level = db.Column(db.String(10))
+
+    projects = db.relationship("Project", backref="engineer")
+
+    def __repr__(self):
+        return (
+            f"\n<engineer "
+            + f"id={self.id}, "
+            + f"name={self.name}, "
+            + f"last_name={self.last_name}, "
+            + f"level={self.level}, "
             + " >"
         )
