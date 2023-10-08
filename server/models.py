@@ -26,3 +26,26 @@ class User(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"User {self.username}. ID: {self.id}"
+
+
+class Project(db.Model, SerializerMixin):
+    __tablename__ = "project"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50))
+    description = db.Column(db.String(150))
+    start_date = db.Column()
+    due_date = db.Column()
+    urgency = db.Column(db.String(10))
+
+    def __repr__(self):
+        return (
+            f"\n<project "
+            + f"id={self.id}, "
+            + f"title={self.title}, "
+            + f"description={self.description}, "
+            + f"start_date={self.start_date}, "
+            + f"due_date={self.due_date}, "
+            + f"urgency={self.urgency}, "
+            + " >"
+        )

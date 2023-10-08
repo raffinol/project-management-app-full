@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Home({ user, setUser }) {
+function Home({ user }) {
 
     if (user) {
       return (
@@ -9,11 +9,7 @@ function Home({ user, setUser }) {
         </>
       );
     } else {
-      return (
-        <>
-            <h2>Please Login or Sign Up</h2>
-        </>
-      );      
+      return <h2>Please Login or Sign Up</h2>;      
     }
   }
   
