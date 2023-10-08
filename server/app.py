@@ -34,8 +34,23 @@ class Signup(Resource):
             session["user_id"] = user.id
             print(user.to_dict())
             return user.to_dict(), 201
-        except IntegrityError:
-            return {"error": "422 Unprocessable Entity"}, 422
+        except IntegrityError as e:
+            errors = []
+
+            required_keys = ["username", "password", "password_confirmation"]
+
+            for key in required_keys:
+                if not request_json[key]:
+                    errors.append(f"{key} is required")
+
+            if request_json["username"] != request_json["password_confirmation"]:
+                errors.append("Password  confirmation failed")
+
+            if isinstance(e, (IntegrityError)):
+                for error in e.orig.args:
+                    errors.append(str(error))
+
+            return {"errors": errors}, 422
 
 
 class CheckSession(Resource):
@@ -63,13 +78,20 @@ class Login(Resource):
         return {"error": "401 Unauthorized"}, 401
 
 
-# @app.route("/")
-# def index():
-#     return "<h1>Project Server</h1>"
+class Logout(Resource):
+    def delete(self):
+        if session.get("user_id"):
+            session["user_id"] = None
+
+            return {}, 204
+
+        return {"error": "401 Unauthorized"}, 401
+
 
 api.add_resource(Signup, "/signup", endpoint="signup")
 api.add_resource(CheckSession, "/check_session", endpoint="check_session")
 api.add_resource(Login, "/login", endpoint="login")
+api.add_resource(Logout, "/logout", endpoint="logout")
 
 
 if __name__ == "__main__":
