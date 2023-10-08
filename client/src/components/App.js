@@ -22,7 +22,7 @@ function App() {
     <>      
       {user ? (
           <Route path="/">
-            <Home user={user}/>
+            <Home user={user} setUser={setUser}/>
           </Route>
       ) : (
           <main>
