@@ -34,8 +34,8 @@ class Project(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
     description = db.Column(db.String(150))
-    start_date = db.Column()
-    due_date = db.Column()
+    start_date = db.Column(db.DateTime)
+    due_date = db.Column(db.DateTime)
     urgency = db.Column(db.String(10))
 
     engineer_id = db.Column(db.Integer, db.ForeignKey("engineer.id"))
