@@ -20,15 +20,15 @@ app.json.compact = False
 
 # Define metadata, instantiate db
 
-# metadata = MetaData(
-#     naming_convention={
-#         "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-#     }
-# )
+metadata = MetaData(
+    naming_convention={
+        "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    }
+)
 
 
-# db = SQLAlchemy(metadata=metadata)
-db = SQLAlchemy()
+db = SQLAlchemy(metadata=metadata)
+# db = SQLAlchemy()
 migrate = Migrate(app, db)
 db.init_app(app)
 

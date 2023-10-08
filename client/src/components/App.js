@@ -3,41 +3,52 @@ import { Switch, Route } from "react-router-dom";
 import SignUp from "./SignUp";
 import Home from "./Home";
 import Login from "./Login";
+import NavBar from "./NavBar";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [errors, setErrors] = useState([])
 
   useEffect(() => {
     fetch("/check_session").then((r) => {
       if (r.ok) {
         r.json().then((user) => setUser(user));
-      } else {
-        r.json().then(err => setErrors(err))
       }
     });
   }, []);
 
+  function handleLogin(user) {
+    setUser(user);
+  }
+
+  function handleLogout() {
+    fetch("/logout", { method: "DELETE" }).then((r) => {
+      if (r.ok) {
+        setUser(null);
+      }
+    });
+  }
+
   return (
-    <>      
+    <>
+      <NavBar user={user} onLogout={handleLogout} />
       {user ? (
-          <Route path="/">
-            <Home user={user} setUser={setUser}/>
-          </Route>
+        <Route path="/">
+          <Home user={user} />
+        </Route>
       ) : (
-          <main>
-            <Switch>
-              <Route path="/signup">
-                <SignUp setUser={setUser} />
-              </Route>
-              <Route path="/login">
-                <Login setUser={setUser} />
-              </Route>
-              <Route path="/">
-                <Home />
-              </Route>
-            </Switch>
-          </main>
+        <main>
+          <Switch>
+            <Route path="/signup">
+              <SignUp setUser={setUser} />
+            </Route>
+            <Route path="/login">
+              <Login onLogin={handleLogin} />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </main>
       )}
     </>
   );

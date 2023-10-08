@@ -27,30 +27,12 @@ class Signup(Resource):
         user = User(username=username)
         user.password_hash = password
 
-        try:
-            db.session.add(user)
-            db.session.commit()
+        db.session.add(user)
+        db.session.commit()
 
-            session["user_id"] = user.id
-            print(user.to_dict())
-            return user.to_dict(), 201
-        except IntegrityError as e:
-            errors = []
-
-            required_keys = ["username", "password", "password_confirmation"]
-
-            for key in required_keys:
-                if not request_json[key]:
-                    errors.append(f"{key} is required")
-
-            if request_json["username"] != request_json["password_confirmation"]:
-                errors.append("Password  confirmation failed")
-
-            if isinstance(e, (IntegrityError)):
-                for error in e.orig.args:
-                    errors.append(str(error))
-
-            return {"errors": errors}, 422
+        session["user_id"] = user.id
+        print(user.to_dict())
+        return user.to_dict(), 201
 
 
 class CheckSession(Resource):
@@ -58,7 +40,6 @@ class CheckSession(Resource):
         if session.get("user_id"):
             user = User.query.filter(User.id == session["user_id"]).first()
             return user.to_dict(), 200
-        return {"error": "401 Unauthorized"}, 204
 
 
 class Login(Resource):
@@ -75,8 +56,6 @@ class Login(Resource):
                 session["user_id"] = user.id
                 return user.to_dict(), 200
 
-        return {"error": "401 Unauthorized"}, 401
-
 
 class Logout(Resource):
     def delete(self):
@@ -84,8 +63,6 @@ class Logout(Resource):
             session["user_id"] = None
 
             return {}, 204
-
-        return {"error": "401 Unauthorized"}, 401
 
 
 api.add_resource(Signup, "/signup", endpoint="signup")
