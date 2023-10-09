@@ -9,8 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from flask_bcrypt import Bcrypt
 
-# Local imports
-
 # Instantiate app, set attributes
 app = Flask(__name__)
 app.secret_key = b'\x1e{L\xce\xdd\xe4/}R"\xf9\xc5HW`\x8d'

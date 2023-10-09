@@ -4,6 +4,7 @@ import SignUp from "./SignUp";
 import Home from "./Home";
 import Login from "./Login";
 import NavBar from "./NavBar";
+import ProjectsList from "./ProjectsList";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -33,7 +34,7 @@ function App() {
       <NavBar user={user} onLogout={handleLogout} />
       {user ? (
         <Route path="/">
-          <Home user={user} />
+          <ProjectsList />
         </Route>
       ) : (
         <main>

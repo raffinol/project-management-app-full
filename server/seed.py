@@ -47,4 +47,3 @@ if __name__ == "__main__":
             db.session.add(project)
 
         db.session.commit()
-        # Seed code goes here!

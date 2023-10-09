@@ -1,20 +1,11 @@
 #!/usr/bin/env python3
 
-# Standard library imports
-
-# Remote library imports
-from flask import request, session
+from flask import request, session, make_response
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
 
-# Local imports
 from config import app, db, api
 
-# Add your model imports
-from models import User
-
-
-# Views go here!
+from models import User, Project
 
 
 class Signup(Resource):
@@ -61,14 +52,31 @@ class Logout(Resource):
     def delete(self):
         if session.get("user_id"):
             session["user_id"] = None
-
             return {}, 204
+
+
+class Projects(Resource):
+    def get(self):
+        projects = []
+        for project in Project.query.all():
+            project_dict = {
+                "title": project.title,
+                "description": project.description,
+                "start_date": project.start_date,
+                "due_date": project.due_date,
+                "urgency": project.urgency,
+            }
+            projects.append(project_dict)
+        response = make_response(projects, 200)
+
+        return response
 
 
 api.add_resource(Signup, "/signup", endpoint="signup")
 api.add_resource(CheckSession, "/check_session", endpoint="check_session")
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
+api.add_resource(Projects, "/projects", endpoint="projects")
 
 
 if __name__ == "__main__":
